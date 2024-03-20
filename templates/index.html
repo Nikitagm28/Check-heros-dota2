@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Dota 2 Герой Инфо</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .error-message { color: red; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Dota 2 Герой Инфо</h1>
+    <form action="/info" method="post">
+        <input type="text" name="hero_name" value="{{ hero_name|default('') }}" placeholder="Введите имя героя">
+        <input type="submit" value="Инфо">
+    </form>
+    <form action="/counter" method="post">
+        <input type="text" name="hero_name" value="{{ hero_name|default('') }}" placeholder="Введите имя героя">
+        <input type="submit" value="Контр пик">
+    </form>
+    
+    {% if error %}
+    <div class="error-message">{{ error }}</div>
+    {% endif %}
+    
+    {% if info %}
+    <h2>Информация о герое: {{ hero_name }}</h2>
+    <table>
+        <tr>
+            <th>Линия</th>
+            <th>Процент присутствие</th>
+            <th>Процент побед</th>
+        </tr>
+        {% for lane in info.popular_lanes %}
+        <tr>
+            <td>{{ lane.lane_name }}</td>
+            <td>{{ lane.presence }}%</td>
+            <td>{{ lane.winrate }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    {% if counters %}
+    <h2>Контр-герои для: {{ hero_name }}</h2>
+    <table>
+        <tr>
+            <th>Герой</th>
+            <th>Ссылка</th>
+            <th>Процент побед</th>
+        </tr>
+        {% for counter in counters.counters %}
+        <tr>
+            <td>{{ counter.hero_name }}</td>
+            <td><a href="{{ counter.hero_url }}" target="_blank">Ссылка на героя</a></td>
+            <td>{{ counter.win_rate }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</body>
+</html>
